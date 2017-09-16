@@ -7,4 +7,4 @@ formatted like:
 linear		% interpolation type
 2		% nr. of interpolation points
 -2.0 0.0	% xy-declarations
- 2.0 0.0	%
+ 2.0 0.0	% 
