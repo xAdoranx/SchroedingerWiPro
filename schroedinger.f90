@@ -1,31 +1,20 @@
 program schroedinger
   
   use formatting
+  use io
   use calculations
   implicit none
 
   integer :: npoints, intpoints, ii
   real(dp) :: xmin, xmax
   real(dp), allocatable :: potvec(:), base(:,:)
+  character :: inttype
 
-  write(*,*) 'enter xmin'
-  read(*,*) xmin
-  write(*,*) 'enter xmax'
-  read(*,*) xmax
-  write(*,*) 'enter npoints'
-  read(*,*) npoints
-  write(*,*) 'enter intpoints'
-  read(*,*) intpoints
-  allocate(base(2,intpoints))
-  write(*,*) 'enter base(:,:)'
-  read(*,*) base
+  call reading(xmin, xmax, npoints, base, inttype)
 
   call interpolationlin(npoints, xmin, xmax, base, potvec)
 
-  do ii=1,size(potvec)
-    write(*,*) potvec(ii)
-  end do
-  
+  call writing(potvec)  
 
   deallocate(base)
 end program schroedinger
