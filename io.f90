@@ -24,12 +24,25 @@ contains
     write(*,*) base
   end subroutine reading
   
-  subroutine writing(potvec)
+  subroutine writing(potvec,xmin,xmax,npoints)
 
     real(dp), intent(in) :: potvec(:)
+    real(dp), intent(in) :: xmin, xmax
+    integer, intent(in) :: npoints
+    real(dp), allocatable :: xdata(:),output(:,:)
+    real(dp) :: deltax
+    integer :: ii
+    allocate(xdata(npoints+1))
+    deltax=(xmax-xmin)/npoints
+    do ii = 1, npoints+1
+      xdata(ii) = ((ii-1)*deltax + xmin)
+    end do
+    allocate(output(2,npoints+1))
+    output(1,:)=xdata
+    output(2,:)=potvec
     open(21, file="discrpot.dat", status="replace", form="formatted", action="write")
-
-    write(21,"(2F8.2)") potvec
+      
+    write(21,"(2F8.2)") output
   
   end subroutine writing
 
