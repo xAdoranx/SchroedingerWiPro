@@ -8,7 +8,7 @@ contains
 
     integer, intent(in) :: npoints
     real(dp), intent(in) :: xmin, xmax
-    real(dp), allocatable, intent(in) :: base(:,:)
+    real(dp), intent(in) :: base(:,:)
     real(dp), allocatable, intent(out) :: potvec(:)
     integer :: ii, jj, nn, iipoints, xtemp
     real(dp) :: deltax, deltay
@@ -49,6 +49,42 @@ contains
     end do
     
   end subroutine interpolationlin
+
+  subroutine interpolationpol(npoints, xmin, xmax, base, potvec)
+
+    integer, intent(in) :: npoints
+    real(dp), intent(in) :: xmin, xmax
+    real(dp), intent(in) :: base(:,:)
+    real(dp), allocatable, intent(out) :: potvec(:)
+    integer :: nn, ii, jj, xx
+    real(dp) :: deltax
+    real(dp), allocatable :: L(:)
+    
+
+    deltax= (xmax-xmin) / npoints
+    nn = size(base(1,:),dim=1)
+    allocate(L(nn))
+    allocate(potvec(npoints+1))
+
+    do xx = 1 , npoints+1
+      L = 1.0_dp
+      do ii = 1, nn
+        do jj = 1, nn
+          if (ii /= jj) then
+            L(ii) = ((((xx-1)*deltax+xmin)- base(1,jj))/(base(1,ii)-base(1,jj)))*L(ii)
+          end if
+        end do
+        if (ii==1) then
+          potvec(xx) = L(ii) * base(2,ii)
+        else
+          potvec(xx) = potvec(xx) + L(ii) * base(2,ii)
+        end if
+      end do
+    end do
+    
+  end subroutine interpolationpol
+  
+    
   
   
 

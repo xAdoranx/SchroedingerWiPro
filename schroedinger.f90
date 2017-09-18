@@ -8,12 +8,17 @@ program schroedinger
   integer :: npoints, intpoints, ii
   real(dp) :: xmin, xmax
   real(dp), allocatable :: potvec(:), base(:,:)
-  character :: inttype
+  character(len=7) :: inttype
 
   call reading(xmin, xmax, npoints, base, inttype)
-
-  call interpolationlin(npoints, xmin, xmax, base, potvec)
-
+  select case (inttype)
+    case("linear")
+      call interpolationlin(npoints, xmin, xmax, base, potvec)
+    case("polynom")
+      call interpolationpol(npoints, xmin, xmax, base, potvec)
+    end select
+    
+  
   call writing(potvec)  
 
   deallocate(base)
