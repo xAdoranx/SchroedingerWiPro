@@ -5,15 +5,16 @@ module io
 
 contains
   
-  subroutine reading(xmin, xmax, npoints, base, inttype)
+  subroutine reading(xmin, xmax, npoints, base, inttype, mass)
     integer, intent(out) :: npoints
-    real(dp), intent(out) :: xmin, xmax
+    real(dp), intent(out) :: xmin, xmax, mass
     real(dp), allocatable, intent(out) :: base(:,:)
     character, intent(out) :: inttype
     integer :: intpoints
 
     open(11, file="schrodinger.inp", status="old", form="formatted", action="read")
 
+    read(11,*) mass
     read(11,*) xmin, xmax, npoints
     read(11,*) inttype
     read(11,*) intpoints

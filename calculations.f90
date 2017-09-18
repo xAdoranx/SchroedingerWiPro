@@ -1,5 +1,6 @@
 module calculations
   use formatting
+  use externs
   implicit none
 
 contains
@@ -49,6 +50,30 @@ contains
     end do
     
   end subroutine interpolationlin
+
+  subroutine eigenvalue(npoints, xmin, xmax, potvec, mass, DD)
+
+    integer, intent(in) :: npoints
+    real(dp), intent(in) :: xmin, xmax, mass
+    real(dp), intent(in) :: potvec(:)
+    real(dp), allocatable, intent(out) :: DD(:)
+    real(dp), allocatable :: EE(:)
+    real(dp) :: aa, deltax
+
+    deltax = (xmax - xmin) / npoints
+    aa = 1 / (mass * deltax**2)
+    allocate(DD(npoints))
+    DD = potvec + aa
+    allocate(EE(npoints))
+    EE(1:npoints-1) = -(1 / 2) * aa
+    !EE(npoints) = 0
+    
+    call solvetridiag(DD, EE)
+
+    write(*,*) DD
+
+  end subroutine eigenvalue
+  
   
   
 
