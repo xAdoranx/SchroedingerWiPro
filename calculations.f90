@@ -1,9 +1,22 @@
+!> Beinhaltet die Interpolationsberechnung des Potentials
+!!
+!! lineare Interpolation und Polynominterpolation nach dem Newton-Verfahren
+!!
 module calculations
   use formatting
   implicit none
 
 contains
-  
+
+!>  lineare Interpolationsmethode
+!!  
+!! \param xmin  unterer X-Wert
+!! \param xmax  oberer X-Wert
+!! \param npoints  Genauigkeit der örtlichen Auflösung
+!! \param base  X und Y-Werte der Stützstellen des Potentials
+!! \param potvec  Y-Werte der Interpolation des Potentials, entweder durch lineare oder
+!! Polynominterpolation berechnet
+!!  
   subroutine interpolationlin(npoints, xmin, xmax, base, potvec)
 
     integer, intent(in) :: npoints
@@ -50,6 +63,15 @@ contains
     
   end subroutine interpolationlin
 
+  !>  Polynominterpolation nach dem Newton-Verfahren
+  !!
+  !! \param xmin  unterer X-Wert
+  !! \param xmax  oberer X-Wert
+  !! \param npoints  Genauigkeit der örtlichen Auflösung
+  !! \param base  X und Y-Werte der Stützstellen des Potentials
+  !! \param potvec  Y-Werte der Interpolation des Potentials, entweder durch lineare oder
+  !! Polynominterpolation
+  !!
   subroutine interpolationpol(npoints, xmin, xmax, base, potvec)
 
     integer, intent(in) :: npoints
