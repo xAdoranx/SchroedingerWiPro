@@ -4,6 +4,7 @@
 !!
 module calculations
   use formatting
+  use externs
   implicit none
 
 contains
@@ -36,9 +37,10 @@ contains
     fullbase(:,2:nn+1) = base
 
     xtemp = 1
-    allocate(potvec(npoints))
+    allocate(potvec(npoints+1))
     potvec(1) = 0
-    
+    potvec(npoints+1) = 0
+
     do jj=1,nn+1
       stepcase = (fullbase(1,jj+1) - fullbase(1,jj)) == 0
       
@@ -106,8 +108,26 @@ contains
     
   end subroutine interpolationpol
   
-    
-  
-  
 
+  subroutine eigenvalue(npoints, xmin, xmax, potvec, mass, DD, eigvec)
+
+    integer, intent(in) :: npoints
+    real(dp), intent(in) :: xmin, xmax, mass
+    real(dp), intent(in) :: potvec(:)
+    real(dp), allocatable, intent(inout) :: DD(:), eigvec(:,:)
+    real(dp), allocatable :: EE(:)
+    real(dp) :: aa, deltax
+
+    deltax = (xmax - xmin) / npoints
+    aa = 1 / (mass * deltax**2)
+    allocate(DD(npoints+1))
+    DD = potvec + aa
+    allocate(EE(npoints+1))
+    EE(1:npoints) = -(1 / 2) * aa
+    !EE(npoints) = 0
+    
+    call solvetridiag(DD, EE, eigvec)
+
+  end subroutine eigenvalue
+  
 end module calculations
