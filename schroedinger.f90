@@ -8,7 +8,7 @@ program schroedinger
   integer :: npoints, intpoints, ii
   real(dp) :: xmin, xmax, mass
   real(dp), allocatable :: potvec(:), DD(:), base(:,:), eigvec(:,:)
-  character :: inttype
+  character(len=7) :: inttype
 
   call reading(xmin, xmax, npoints, base, inttype, mass)
 
@@ -21,7 +21,7 @@ program schroedinger
 
   call eigenvalue(npoints, xmin, xmax, potvec, mass, DD, eigvec)
 
-  call writingpot(potvec)
+  call writingpot(potvec, xmin, xmax, npoints)
 
   call writingew(npoints, xmin, xmax, DD, eigvec)
 
