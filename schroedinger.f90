@@ -19,7 +19,7 @@ program schroedinger
     end select
     
   
-  call writing(potvec)  
+  call writing(potvec,xmin,xmax,npoints)  
 
   deallocate(base)
 end program schroedinger
