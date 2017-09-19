@@ -6,11 +6,15 @@ module externs
 
 contains
 
-  subroutine solvetridiag(DD, EE)
+  subroutine solvetridiag(DD, EE, eigvec)
     real(dp), allocatable, intent(inout) :: DD(:)
-    real(dp), allocatable, intent(in) :: EE(:)
+    real(dp), allocatable, intent(inout) :: EE(:)
+    real(dp), allocatable, intent(out) :: eigvec(:,:)
+    integer :: INFO
     
-    call la_stev(DD, EE)
+    call la_stevd(DD, EE, eigvec, INFO)
+
+    write(*,*) INFO
     
   end subroutine solvetridiag
 

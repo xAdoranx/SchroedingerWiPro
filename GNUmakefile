@@ -7,6 +7,7 @@ LNOPTS =
 
 EXLNOPTS = -L/usr/local/stow/lapack95/lib
 EXFCOPTS = -I/usr/local/stow/lapack95/include/lapack95
+BIBOPTS  = -llapack95 -llapack
 
 NAME = schroedinger
 
@@ -25,7 +26,7 @@ ALOBJS = $(OBJSC) $(OBJFO) $(OBJIO) $(OBJEX) $(OBJCA)
 
 
 $(NAME): $(ALOBJS)
-	$(LN) $(LNOPTS) -o $@ $^
+	$(LN) $(LNOPTS) -o $@ $(EXLNOPTS) $^ $(BIBOPTS)
 
 $(OBJFO): $(FILFO)
 	$(FC) $(FCOPTS) -c $<
