@@ -1,3 +1,4 @@
+!> Contains INput/Output related routines
 module io
 
   use formatting
@@ -5,28 +6,36 @@ module io
 
 contains
 
-  !> Liest die Benutzerangaben aus der Input-Datei "schrodinger.inp" ein.
-  !!
-  !! \details Es werden alle Angaben des Benutzers zur Lösung der Schrödinger-Gleichung eingelesen.
-  !! Die Masse des Quantenobjektes, der örtliche Rahmen, die zu berechnenden Eigenwerte, der
-  !! Interpolationstyp des Potentials und schließlich die Anzahl und die Position den
-  !! Interpolationsstützpunkte.
-  !!
-  !! \param xmin  unterer X-Wert
-  !! \param xmax  oberer X-Wert
-  !! \param npoints  Genauigkeit der örtlichen Auflösung
-  !! \param base  X und Y-Werte der Stützstellen des Potentials
-  !! \param inttype  Art der Interpolation (linear oder polynom)
-  !! \param mass Masse des Teilchens im Potential (output)
-    
+  !> Reads in the data for solving the schroedinger equation
   subroutine reading(xmin, xmax, npoints, base, inttype, mass, valrange)
+    !> Input number of x values
+    !!
+    !! must be an integer
     integer, intent(out) :: npoints
+
+    !> Input range of eigenvalues
+    !!
+    !! Range of eigenvalues must be a vector with two values
     integer, allocatable, intent(out) :: valrange(:)
+
+    !> Input minimum and maximum x values and mass of particle
+    !!
+    !! xmin, xmax and mass must be a real number
     real(dp), intent(out) :: xmin, xmax, mass
+
+    !> Input bases for potential
+    !!
+    !! base must be an array with two rows
     real(dp), allocatable, intent(out) :: base(:,:)
+
+    !> Input character for chosing interpolation type
+    !!
+    !! If inttype is "linear" linear interpolation is used, if inttype is "polynom" newtonian
+    !! polynomial interpolation ist used 
     character(len=7), intent(out) :: inttype
     integer :: intpoints
 
+    !> Read data from file schrodinger.inp
     open(11, file="schrodinger.inp", status="old", form="formatted", action="read")
 
     read(11,*) mass
@@ -41,41 +50,28 @@ contains
     read(11,*) base
   end subroutine reading
   
-<<<<<<< HEAD
-  subroutine writing(potvec,xmin,xmax,npoints)
-=======
-  !>  Schreibt die Ergebnisse in die Output-Textdateien
-  !!
-  !! \details Berechnung der X-Werte für die Ausgabe und Ausgabe des Potentials, der Energiewerte
-  !! und der Wellenfunktionen
-  !!
-  !! \param xmin  unterer X-Wert
-  !! \param xmax  oberer X-Wert
-  !! \param npoints  Genauigkeit der örtlichen Auflösung
-  !! \param potvec  Y-Werte der Interpolation des Potentials, entweder durch lineare oder
-  !! Polynominterpolation berechnet
-  !!
-  subroutine writingpot(potvec, xmin, xmax, npoints)
->>>>>>> b155cb8094cb3d17cda2289da32ebf776e59a5c5
 
+
+  !>  Calculates x-values and writes potential interpolation in data discrpot and 
+  subroutine writingpot(potvec, xmin, xmax, npoints)
+
+
+    !> Input y-values of potential
+    !!
+    !! must be a vector of the same length as the x-datas
     real(dp), intent(in) :: potvec(:)
+
+    !> Input minimum and maximum x values
+    !!
+    !! xmin and xmax must be a real number 
     real(dp), intent(in) :: xmin, xmax
+
+    !> Input number of x values
+    !!
+    !! must be an integer
     integer, intent(in) :: npoints
-<<<<<<< HEAD
-    real(dp), allocatable :: xdata(:),output(:,:)
-    real(dp) :: deltax
-    integer :: ii
-    allocate(xdata(npoints+1))
-    deltax=(xmax-xmin)/npoints
-    do ii = 1, npoints+1
-      xdata(ii) = ((ii-1)*deltax + xmin)
-    end do
-    allocate(output(2,npoints+1))
-    output(1,:)=xdata
-    output(2,:)=potvec
-    open(21, file="discrpot.dat", status="replace", form="formatted", action="write")
-      
-=======
+    
+    !> Output of xdatas and y-values of the potential
     real(dp), allocatable :: xdata(:), output(:,:)
     real(dp) :: deltax
     integer :: ii
@@ -90,25 +86,44 @@ contains
     
     output(1,:) = xdata
     output(2,:) = potvec
-    
+
+    !> Writes potential in file discrpot.dat
     open(21, file="discrpot.dat", status="replace", form="formatted", action="write")
     
 
->>>>>>> b155cb8094cb3d17cda2289da32ebf776e59a5c5
+
     write(21,"(2F8.2)") output
   
   end subroutine writingpot
-
+  !>  Calculates x-values and writes values for eigenvalue, engeries and wavefunctions in
+  !!output-files
   subroutine writingew(npoints, xmin, xmax, DD, eigvec, valrange)
 
+    !> Input eigenvalues(DD) and eigenvectors(eigvec)
+    !!
+    !! Eigenvalues must be a vector and eigenvectors must be an array
     real(dp), intent(in) :: DD(:), eigvec(:,:)
+
+    !> Input minimum and maximum x values
+    !!
+    !! xmin and xmax must be a real number
     real(dp), intent(in) :: xmin, xmax
+
+    !> Input number of x values
+    !!
+    !! must be an integer
     integer, intent(in) :: npoints
+
+    !> Input range of eigenvalues
+    !!
+    !! Range of eigenvalues must be a vector with two values
     integer, intent(in) :: valrange(:)
     real(dp) :: deltax
     real(dp), allocatable :: xval(:), output(:,:)
     integer :: ii, range
 
+    !> Writes the energies in file energies.dat, the wavefunctions in file wfuncs.dat and the
+    !eigenvalues in file ewfuncs.dat
     open(22, file="energies.dat", status="replace", form="formatted", action="write")
     open(23, file="wfuncs.dat", status="replace", form="formatted", action="write")
     open(24, file="ewfuncs.dat", status="replace", form="formatted", action="write")

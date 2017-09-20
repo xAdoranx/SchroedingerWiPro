@@ -10,8 +10,9 @@ use by ./schroedinger
 Input in file schrodinger.inp
 formatted like:
 
-2		% mass
--2 2 1999	% xMin, xMax, nPoints
+2.0		% mass
+-2.0 2.0 1999	% xMin, xMax, nPoints
+1 15 		% first and last eigenvalue to calculate
 linear		% interpolation type
 2		% nr. of interpolation points
 -2.0 0.0	% xy-declarations
