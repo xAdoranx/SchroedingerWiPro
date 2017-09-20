@@ -1,9 +1,11 @@
+!> writes autotest results
 program autotest
 
   use formatting
   use io
   implicit none
 
+  !> Input test results from autotest
   logical, allocatable :: compare(:,:)
   logical :: compenerg, comppot, compwfun, compewfun
 

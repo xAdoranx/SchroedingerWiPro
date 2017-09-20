@@ -169,6 +169,7 @@ contains
     
   end subroutine writingew
 
+  !> routine for autotest
   subroutine autotestread(compare)
 
     integer :: npoints
@@ -189,6 +190,9 @@ contains
     real(dp), allocatable :: discrpotori3(:,:), discrpotcalc3(:,:)
     real(dp), allocatable :: wfuncsori3(:,:), wfuncscalc3(:,:)
     real(dp), allocatable :: ewfuncsori3(:,:), ewfuncscalc3(:,:)
+    !> Output test resulst
+    !!
+    !! array with logicals as values 
     logical, allocatable, intent(out) :: compare(:,:)
 
     open(31, file="test/schrodinger1.inp", status="old", form="formatted", action="read")
