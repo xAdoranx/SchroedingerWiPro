@@ -122,9 +122,14 @@ contains
     aa = 1 / (mass * deltax**2)
     allocate(DD(npoints+1))
     DD = potvec + aa
+    write(*,*) mass
+    write(*,*) deltax
+    write(*,*) aa
+    write(*,*) DD
     allocate(EE(npoints+1))
-    EE(1:npoints) = -(1 / 2) * aa
+    EE(1:npoints) = (aa / 2) * (-1)
     !EE(npoints) = 0
+    write(*,*) EE
     
     call solvetridiag(DD, EE, eigvec)
 

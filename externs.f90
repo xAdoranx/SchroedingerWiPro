@@ -11,9 +11,10 @@ contains
     real(dp), allocatable, intent(inout) :: EE(:)
     real(dp), allocatable, intent(out) :: eigvec(:,:)
     integer :: INFO
+    allocate(eigvec(size(DD),size(DD)))
     
-    call la_stevd(DD, EE, eigvec, INFO)
-
+    call la_stev(DD, EE, eigvec, INFO)
+     
     write(*,*) INFO
     
   end subroutine solvetridiag

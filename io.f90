@@ -19,8 +19,9 @@ contains
   !! \param inttype  Art der Interpolation (linear oder polynom)
   !! \param mass Masse des Teilchens im Potential (output)
     
-  subroutine reading(xmin, xmax, npoints, base, inttype, mass)
+  subroutine reading(xmin, xmax, npoints, base, inttype, mass, valrange)
     integer, intent(out) :: npoints
+    integer, allocatable, intent(out) :: valrange(:)
     real(dp), intent(out) :: xmin, xmax, mass
     real(dp), allocatable, intent(out) :: base(:,:)
     character(len=7), intent(out) :: inttype
@@ -30,6 +31,10 @@ contains
 
     read(11,*) mass
     read(11,*) xmin, xmax, npoints
+    
+    allocate(valrange(2))
+    read(11,*) valrange
+    
     read(11,*) inttype
     read(11,*) intpoints
     allocate(base(2,intpoints))
@@ -74,20 +79,21 @@ contains
   
   end subroutine writingpot
 
-  subroutine writingew(npoints, xmin, xmax, DD, eigvec)
+  subroutine writingew(npoints, xmin, xmax, DD, eigvec, valrange)
 
     real(dp), intent(in) :: DD(:), eigvec(:,:)
     real(dp), intent(in) :: xmin, xmax
     integer, intent(in) :: npoints
+    integer, intent(in) :: valrange(:)
     real(dp) :: deltax
     real(dp), allocatable :: xval(:), output(:,:)
-    integer :: ii
+    integer :: ii, range
 
-    open(12, file="energies.dat", status="replace", form="formatted", action="write")
-    open(13, file="wfuncs.dat", status="replace", form="formatted", action="write")
-    open(14, file="ewfuncs.dat", status="replace", form="formatted", action="write")
+    open(22, file="energies.dat", status="replace", form="formatted", action="write")
+    open(23, file="wfuncs.dat", status="replace", form="formatted", action="write")
+    open(24, file="ewfuncs.dat", status="replace", form="formatted", action="write")
 
-    write(12,"(F12.3)") DD
+    write(22,"(F12.3)") DD
 
     deltax = (xmax - xmin) / npoints
     allocate(xval(npoints+1))
@@ -96,15 +102,27 @@ contains
       xval(ii) = xval(ii-1) + deltax
     end do
 
-    allocate(output(npoints+1,npoints+2))
+    range = valrange(2) - valrange(1)
+    allocate(output(npoints+1,range+1))
 
     output(:,1) = xval
-    output(:,2:npoints+2) = eigvec
+    output(:,2:range+1) = eigvec(:,valrange(1):valrange(2))
     !output = transpose(output)
 
     do ii=1,size(output(:,1),1)
-      write(13,"(F8.4,100000000000F8.4)") output(ii,:)
+      write(23,"(10000000000000F8.4)") output(ii,:)
     end do
+    
+
+    do ii=1,range
+      output(:,ii+1) = output(:,ii+1) + DD(valrange(1)+ii-1)
+    end do
+    
+    !write(*,*) output
+    do ii=1,size(output(:,1),1)
+      write(24,"(10000000000000F8.4)") output(ii,:)
+    end do
+    
     
   end subroutine writingew
     

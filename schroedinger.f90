@@ -6,11 +6,12 @@ program schroedinger
   implicit none
 
   integer :: npoints, intpoints, ii
+  integer, allocatable :: valrange(:)
   real(dp) :: xmin, xmax, mass
   real(dp), allocatable :: potvec(:), DD(:), base(:,:), eigvec(:,:)
   character(len=7) :: inttype
 
-  call reading(xmin, xmax, npoints, base, inttype, mass)
+  call reading(xmin, xmax, npoints, base, inttype, mass, valrange)
 
   select case (inttype)
     case("linear")
@@ -23,7 +24,7 @@ program schroedinger
 
   call writingpot(potvec, xmin, xmax, npoints)
 
-  call writingew(npoints, xmin, xmax, DD, eigvec)
+  call writingew(npoints, xmin, xmax, DD, eigvec, valrange)
 
   deallocate(base)
 end program schroedinger
