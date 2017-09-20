@@ -388,8 +388,6 @@ contains
     compare(2,3) = maxval(abs((discrpotori3-discrpotcalc3))) < tol
     compare(3,3) = maxval(abs((wfuncsori3-wfuncscalc3))) < tol
     compare(4,3) = maxval(abs((ewfuncsori3-ewfuncscalc3))) < tol
-
-    write(*,*) maxval(abs((wfuncsori3-wfuncscalc3)))
     
     deallocate(energiesori3)
     deallocate(energiescalc3)
