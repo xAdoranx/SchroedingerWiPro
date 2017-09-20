@@ -24,7 +24,7 @@ contains
     real(dp), intent(in) :: xmin, xmax
     real(dp), intent(in) :: base(:,:)
     real(dp), allocatable, intent(out) :: potvec(:)
-    integer :: ii, jj, nn, iipoints, xtemp
+    integer :: ii, jj, nn, jjstart, iipoints, xtemp
     real(dp) :: deltax, deltay
     real(dp), allocatable :: fullbase(:,:)
     logical :: stepcase
@@ -38,10 +38,15 @@ contains
 
     xtemp = 1
     allocate(potvec(npoints+1))
-    potvec(1) = 0
-    potvec(npoints+1) = 0
+    if(fullbase(1,1)==fullbase(1,2)) then
+      potvec(1) = fullbase(2,2)
+      jjstart = 2
+    else
+      potvec(1) = fullbase(2,1)
+      jjstart = 1
+    end if    
 
-    do jj=1,nn+1
+    do jj=jjstart,nn+1
       stepcase = (fullbase(1,jj+1) - fullbase(1,jj)) == 0
       
       if (stepcase) then
@@ -53,11 +58,7 @@ contains
       end if
       
       do ii=xtemp, iipoints
-        if (jj==1) then
-          potvec(ii) = deltay
-        else
-          potvec(ii) = potvec(ii-1) + deltay
-        end if
+          potvec(ii+1) = potvec(ii) + deltay
       end do
       
       xtemp = iipoints+1
@@ -122,14 +123,8 @@ contains
     aa = 1 / (mass * deltax**2)
     allocate(DD(npoints+1))
     DD = potvec + aa
-    write(*,*) mass
-    write(*,*) deltax
-    write(*,*) aa
-    write(*,*) DD
     allocate(EE(npoints+1))
     EE(1:npoints) = (aa / 2) * (-1)
-    !EE(npoints) = 0
-    write(*,*) EE
     
     call solvetridiag(DD, EE, eigvec)
 

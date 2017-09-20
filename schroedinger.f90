@@ -9,14 +9,14 @@ program schroedinger
   integer, allocatable :: valrange(:)
   real(dp) :: xmin, xmax, mass
   real(dp), allocatable :: potvec(:), DD(:), base(:,:), eigvec(:,:)
-  character(len=7) :: inttype
+  character(len=10) :: inttype
 
   call reading(xmin, xmax, npoints, base, inttype, mass, valrange)
 
   select case (inttype)
     case("linear")
       call interpolationlin(npoints, xmin, xmax, base, potvec)
-    case("polynom")
+    case("polynomial")
       call interpolationpol(npoints, xmin, xmax, base, potvec)
   end select
 
