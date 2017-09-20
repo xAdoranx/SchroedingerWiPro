@@ -1,3 +1,6 @@
+!> Gibt die Genauigkeit der Fließkommazahlen an
+!!
+!! \param dp Genauigkeit von Fließkommazahlen
 module formatting
 
   implicit none

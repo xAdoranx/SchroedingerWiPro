@@ -1,9 +1,23 @@
+!> Beinhaltet die Interpolationsberechnung des Potentials
+!!
+!! lineare Interpolation und Polynominterpolation nach dem Newton-Verfahren
+!!
 module calculations
   use formatting
+  use externs
   implicit none
 
 contains
-  
+
+!>  lineare Interpolationsmethode
+!!  
+!! \param xmin  unterer X-Wert
+!! \param xmax  oberer X-Wert
+!! \param npoints  Genauigkeit der örtlichen Auflösung
+!! \param base  X und Y-Werte der Stützstellen des Potentials
+!! \param potvec  Y-Werte der Interpolation des Potentials, entweder durch lineare oder
+!! Polynominterpolation berechnet
+!!  
   subroutine interpolationlin(npoints, xmin, xmax, base, potvec)
 
     integer, intent(in) :: npoints
@@ -23,9 +37,10 @@ contains
     fullbase(:,2:nn+1) = base
 
     xtemp = 1
-    allocate(potvec(npoints))
+    allocate(potvec(npoints+1))
     potvec(1) = 0
-    
+    potvec(npoints+1) = 0
+
     do jj=1,nn+1
       stepcase = (fullbase(1,jj+1) - fullbase(1,jj)) == 0
       
@@ -50,6 +65,15 @@ contains
     
   end subroutine interpolationlin
 
+  !>  Polynominterpolation nach dem Newton-Verfahren
+  !!
+  !! \param xmin  unterer X-Wert
+  !! \param xmax  oberer X-Wert
+  !! \param npoints  Genauigkeit der örtlichen Auflösung
+  !! \param base  X und Y-Werte der Stützstellen des Potentials
+  !! \param potvec  Y-Werte der Interpolation des Potentials, entweder durch lineare oder
+  !! Polynominterpolation
+  !!
   subroutine interpolationpol(npoints, xmin, xmax, base, potvec)
 
     integer, intent(in) :: npoints
@@ -84,8 +108,31 @@ contains
     
   end subroutine interpolationpol
   
-    
-  
-  
 
+  subroutine eigenvalue(npoints, xmin, xmax, potvec, mass, DD, eigvec)
+
+    integer, intent(in) :: npoints
+    real(dp), intent(in) :: xmin, xmax, mass
+    real(dp), intent(in) :: potvec(:)
+    real(dp), allocatable, intent(inout) :: DD(:), eigvec(:,:)
+    real(dp), allocatable :: EE(:)
+    real(dp) :: aa, deltax
+
+    deltax = (xmax - xmin) / npoints
+    aa = 1 / (mass * deltax**2)
+    allocate(DD(npoints+1))
+    DD = potvec + aa
+    write(*,*) mass
+    write(*,*) deltax
+    write(*,*) aa
+    write(*,*) DD
+    allocate(EE(npoints+1))
+    EE(1:npoints) = (aa / 2) * (-1)
+    !EE(npoints) = 0
+    write(*,*) EE
+    
+    call solvetridiag(DD, EE, eigvec)
+
+  end subroutine eigenvalue
+  
 end module calculations
