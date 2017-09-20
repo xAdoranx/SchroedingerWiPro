@@ -28,9 +28,11 @@ contains
     allocate(eigvec(size(DD),size(DD)))
     
     call la_stev(DD, EE, eigvec, INFO)
-     
-    write(*,*) INFO
-    
+
+    if(INFO/=0) then
+      write(*,*) "ERROR in la_stev: in the", INFO, "th value"
+    end if
+       
   end subroutine solvetridiag
 
 end module externs

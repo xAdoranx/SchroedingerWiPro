@@ -142,7 +142,7 @@ contains
       xdata(ii) = xdata(ii-1) + deltax
     end do
 
-    range = valrange(2) - valrange(1)
+    range = valrange(2) - valrange(1) + 1
     allocate(output(npoints+1,range+1))
 
     output(:,1) = xdata
@@ -191,18 +191,24 @@ contains
     real(dp), allocatable :: ewfuncsori3(:,:), ewfuncscalc3(:,:)
     logical, allocatable, intent(out) :: compare(:,:)
 
-    open(31, file="test/schrodingertest1.inp", status="old", form="formatted", action="read")
+    open(31, file="test/schrodinger1.inp", status="old", form="formatted", action="read")
 
     read(31,*) mass
     read(31,*) xmin, xmax, npoints
+
+    if(.not. allocated(valrange)) then
+      allocate(valrange(2))
+    end if
     
-    allocate(valrange(2))
     read(31,*) valrange
-    range = valrange(2) - valrange(1)
+    range = valrange(2) - valrange(1) + 1
     
     read(31,*) inttype
     read(31,*) intpoints
-    allocate(base(2,intpoints))
+    if(.not. allocated(base)) then
+      allocate(base(2,intpoints))
+    end if
+    
     read(31,*) base
 
     close(31)
@@ -222,26 +228,27 @@ contains
 
     allocate(energiesori1(range))
     allocate(energiescalc1(range))
-    allocate(discrpotori1(npoints,2))
-    allocate(discrpotcalc1(npoints,2))
-    allocate(wfuncsori1(npoints,range+1))
-    allocate(wfuncscalc1(npoints,range+1))
-    allocate(ewfuncsori1(npoints,range+1))
-    allocate(ewfuncscalc1(npoints,range+1))
-    read(41,*) energiesori1
-    read(45,*) energiescalc1
-    read(42,*) discrpotori1
-    read(46,*) discrpotcalc1
-    read(43,*) wfuncsori1
-    read(47,*) wfuncscalc1
-    read(44,*) ewfuncsori1
-    read(48,*) ewfuncscalc1
+    allocate(discrpotori1(npoints+1,2))
+    allocate(discrpotcalc1(npoints+1,2))
+    allocate(wfuncsori1(npoints+1,range+1))
+    allocate(wfuncscalc1(npoints+1,range+1))
+    allocate(ewfuncsori1(npoints+1,range+1))
+    allocate(ewfuncscalc1(npoints+1,range+1))
+    read(41,"(10000000000000F14.7)") energiesori1
+    read(45,"(10000000000000F14.7)") energiescalc1
+    read(42,"(10000000000000F14.7)") discrpotori1
+    read(46,"(10000000000000F14.7)") discrpotcalc1
+    read(43,"(10000000000000F14.7)") wfuncsori1
+    read(47,"(10000000000000F14.7)") wfuncscalc1
+    read(44,"(10000000000000F14.7)") ewfuncsori1
+    read(48,"(10000000000000F14.7)") ewfuncscalc1
 
     compare(1,1) = maxval(abs((energiesori1-energiescalc1))) < tol
     compare(2,1) = maxval(abs((discrpotori1-discrpotcalc1))) < tol
     compare(3,1) = maxval(abs((wfuncsori1-wfuncscalc1))) < tol
     compare(4,1) = maxval(abs((ewfuncsori1-ewfuncscalc1))) < tol
 
+    
     deallocate(energiesori1)
     deallocate(energiescalc1)
     deallocate(discrpotori1)
@@ -250,7 +257,6 @@ contains
     deallocate(wfuncscalc1)
     deallocate(ewfuncsori1)
     deallocate(ewfuncscalc1)
-
     close(41)
     close(42)
     close(43)
@@ -262,18 +268,20 @@ contains
 
     
 
-    open(32, file="test/schrodingertest2.inp", status="old", form="formatted", action="read")
+    open(32, file="test/schrodinger2.inp", status="old", form="formatted", action="read")
 
     read(32,*) mass
     read(32,*) xmin, xmax, npoints
+
+    if(.not. allocated(valrange)) then
+      allocate(valrange(2))
+    end if
     
-    allocate(valrange(2))
     read(32,*) valrange
-    range = valrange(2) - valrange(1)
+    range = valrange(2) - valrange(1) + 1
     
     read(32,*) inttype
     read(32,*) intpoints
-    allocate(base(2,intpoints))
     read(32,*) base
 
     close(32)
@@ -290,25 +298,26 @@ contains
     
     allocate(energiesori2(range))
     allocate(energiescalc2(range))
-    allocate(discrpotori2(npoints,2))
-    allocate(discrpotcalc2(npoints,2))
-    allocate(wfuncsori2(npoints,range+1))
-    allocate(wfuncscalc2(npoints,range+1))
-    allocate(ewfuncsori2(npoints,range+1))
-    allocate(ewfuncscalc2(npoints,range+1))
-    read(51,*) energiesori2
-    read(55,*) energiescalc2
-    read(52,*) discrpotori2
-    read(56,*) discrpotcalc2
-    read(53,*) wfuncsori2
-    read(57,*) wfuncscalc2
-    read(54,*) ewfuncsori2
-    read(58,*) ewfuncscalc2
+    allocate(discrpotori2(npoints+1,2))
+    allocate(discrpotcalc2(npoints+1,2))
+    allocate(wfuncsori2(npoints+1,range+1))
+    allocate(wfuncscalc2(npoints+1,range+1))
+    allocate(ewfuncsori2(npoints+1,range+1))
+    allocate(ewfuncscalc2(npoints+1,range+1))
+    read(51,"(10000000000000F14.7)") energiesori2
+    read(55,"(10000000000000F14.7)") energiescalc2
+    read(52,"(10000000000000F14.7)") discrpotori2
+    read(56,"(10000000000000F14.7)") discrpotcalc2
+    read(53,"(10000000000000F14.7)") wfuncsori2
+    read(57,"(10000000000000F14.7)") wfuncscalc2
+    read(54,"(10000000000000F14.7)") ewfuncsori2
+    read(58,"(10000000000000F14.7)") ewfuncscalc2
 
     compare(1,2) = maxval(abs((energiesori2-energiescalc2))) < tol
     compare(2,2) = maxval(abs((discrpotori2-discrpotcalc2))) < tol
     compare(3,2) = maxval(abs((wfuncsori2-wfuncscalc2))) < tol
     compare(4,2) = maxval(abs((ewfuncsori2-ewfuncscalc2))) < tol
+
 
     deallocate(energiesori2)
     deallocate(energiescalc2)
@@ -340,44 +349,48 @@ contains
     open(68, file="test/ewfuncs3.dat", status="old", form="formatted", action="read")
 
 
-    open(33, file="test/schrodingertest3.inp", status="old", form="formatted", action="read")
+    open(33, file="test/schrodinger3.inp", status="old", form="formatted", action="read")
 
     read(33,*) mass
     read(33,*) xmin, xmax, npoints
+
+    if(.not. allocated(valrange)) then
+      allocate(valrange(2))
+    end if
     
-    allocate(valrange(2))
     read(33,*) valrange
-    range = valrange(2) - valrange(1)
+    range = valrange(2) - valrange(1) + 1
     
     read(33,*) inttype
     read(33,*) intpoints
-    allocate(base(2,intpoints))
     read(33,*) base
 
     close(33)
 
     allocate(energiesori3(range))
     allocate(energiescalc3(range))
-    allocate(discrpotori3(npoints,2))
-    allocate(discrpotcalc3(npoints,2))
-    allocate(wfuncsori3(npoints,range+1))
-    allocate(wfuncscalc3(npoints,range+1))
-    allocate(ewfuncsori3(npoints,range+1))
-    allocate(ewfuncscalc3(npoints,range+1))
-    read(61,*) energiesori1
-    read(65,*) energiescalc1
-    read(62,*) discrpotori1
-    read(66,*) discrpotcalc1
-    read(63,*) wfuncsori1
-    read(67,*) wfuncscalc1
-    read(64,*) ewfuncsori1
-    read(68,*) ewfuncscalc1
+    allocate(discrpotori3(npoints+1,2))
+    allocate(discrpotcalc3(npoints+1,2))
+    allocate(wfuncsori3(npoints+1,range+1))
+    allocate(wfuncscalc3(npoints+1,range+1))
+    allocate(ewfuncsori3(npoints+1,range+1))
+    allocate(ewfuncscalc3(npoints+1,range+1))
+    read(61,"(10000000000000F14.7)") energiesori3
+    read(65,"(10000000000000F14.7)") energiescalc3
+    read(62,"(10000000000000F14.7)") discrpotori3
+    read(66,"(10000000000000F14.7)") discrpotcalc3
+    read(63,"(10000000000000F14.7)") wfuncsori3
+    read(67,"(10000000000000F14.7)") wfuncscalc3
+    read(64,"(10000000000000F14.7)") ewfuncsori3
+    read(68,"(10000000000000F14.7)") ewfuncscalc3
 
     compare(1,3) = maxval(abs((energiesori3-energiescalc3))) < tol
     compare(2,3) = maxval(abs((discrpotori3-discrpotcalc3))) < tol
     compare(3,3) = maxval(abs((wfuncsori3-wfuncscalc3))) < tol
     compare(4,3) = maxval(abs((ewfuncsori3-ewfuncscalc3))) < tol
 
+    write(*,*) maxval(abs((wfuncsori3-wfuncscalc3)))
+    
     deallocate(energiesori3)
     deallocate(energiescalc3)
     deallocate(discrpotori3)
