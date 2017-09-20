@@ -5,8 +5,7 @@ FCOPTS =
 LN = $(FC)
 LNOPTS =
 
-EXLNOPTS = -L/usr/local/stow/lapack95/lib
-EXFCOPTS = -I/usr/local/stow/lapack95/include/lapack95
+include config.mk
 BIBOPTS  = -llapack95 -llapack
 
 NAME = schroedinger

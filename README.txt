@@ -2,10 +2,14 @@ Solves eigenfunctions of the schroedinger equation for specific eigenenergies.
 
 Installation:
 
-1. make
-2. make realclean
+1. verify the file: "config.mk"
+   - edit the local pathes of the lapack library depending on the local device
+2. "make"
+3. "make clean"
+4. check installation with "make test"
 
-use by ./schroedinger
+The program is used by the console command ./schroedinger
+It needs the input file 
 
 Input in file schrodinger.inp
 formatted like:
