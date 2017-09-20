@@ -25,4 +25,4 @@ linear		% interpolation type
 Interpolation type options:
 
 	 linear
-	 polynom
+	 polynomial
