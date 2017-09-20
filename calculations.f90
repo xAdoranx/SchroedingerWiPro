@@ -1,7 +1,4 @@
-!> Beinhaltet die Interpolationsberechnung des Potentials
-!!
-!! lineare Interpolation und Polynominterpolation nach dem Newton-Verfahren
-!!
+!> Contains calculations for linear and polynomial interpolation and eigenvalues
 module calculations
   use formatting
   use externs
@@ -9,20 +6,27 @@ module calculations
 
 contains
 
-!>  lineare Interpolationsmethode
-!!  
-!! \param xmin  unterer X-Wert
-!! \param xmax  oberer X-Wert
-!! \param npoints  Genauigkeit der örtlichen Auflösung
-!! \param base  X und Y-Werte der Stützstellen des Potentials
-!! \param potvec  Y-Werte der Interpolation des Potentials, entweder durch lineare oder
-!! Polynominterpolation berechnet
-!!  
+  !> calculations for linear interpolation
   subroutine interpolationlin(npoints, xmin, xmax, base, potvec)
 
+    !> Input number of x values
+    !!
+    !! must be an integer
     integer, intent(in) :: npoints
+
+    !> Input minimum and maximum x values
+    !!
+    !! xmin and xmax must be a real number
     real(dp), intent(in) :: xmin, xmax
+
+    !> Input bases for potential
+    !!
+    !! base must be an array with two rows
     real(dp), intent(in) :: base(:,:)
+
+    !> Output y-values of potential
+    !!
+    !! is a vector of the same length as the x-datas
     real(dp), allocatable, intent(out) :: potvec(:)
     integer :: ii, jj, nn, jjstart, iipoints, xtemp
     real(dp) :: deltax, deltay
@@ -66,20 +70,27 @@ contains
     
   end subroutine interpolationlin
 
-  !>  Polynominterpolation nach dem Newton-Verfahren
-  !!
-  !! \param xmin  unterer X-Wert
-  !! \param xmax  oberer X-Wert
-  !! \param npoints  Genauigkeit der örtlichen Auflösung
-  !! \param base  X und Y-Werte der Stützstellen des Potentials
-  !! \param potvec  Y-Werte der Interpolation des Potentials, entweder durch lineare oder
-  !! Polynominterpolation
-  !!
+  !> calculations for polynomial interpolation
   subroutine interpolationpol(npoints, xmin, xmax, base, potvec)
 
+    !> Input number of x values
+    !!
+    !! must be an integer
     integer, intent(in) :: npoints
+
+    !> Input minimum and maximum x values
+    !!
+    !! xmin and xmax must be a real number
     real(dp), intent(in) :: xmin, xmax
+
+    !> Input bases for potential
+    !!
+    !! base must be an array with two rows
     real(dp), intent(in) :: base(:,:)
+
+    !> Output y-values of potential
+    !!
+    !! is a vector of the same length as the x-datas
     real(dp), allocatable, intent(out) :: potvec(:)
     integer :: nn, ii, jj, xx
     real(dp) :: deltax
@@ -112,9 +123,24 @@ contains
 
   subroutine eigenvalue(npoints, xmin, xmax, potvec, mass, DD, eigvec)
 
+    !> Input number of x values
+    !!
+    !! must be an integer
     integer, intent(in) :: npoints
+
+    !> Input minimum and maximum x values and mass of particle
+    !!
+    !! xmin, xmax and mass must be a real number
     real(dp), intent(in) :: xmin, xmax, mass
+
+    !> Input y-values of potential
+    !!
+    !! must be a vector of the same length as the x-datas
     real(dp), intent(in) :: potvec(:)
+
+    !> Output eigenvalues(DD) and eigenvectors(eigvec)
+    !!
+    !! Eigenvalues are in a vector and eigenvectors are in an array
     real(dp), allocatable, intent(inout) :: DD(:), eigvec(:,:)
     real(dp), allocatable :: EE(:)
     real(dp) :: aa, deltax
